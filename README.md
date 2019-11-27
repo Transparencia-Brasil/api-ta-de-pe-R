@@ -22,6 +22,7 @@ O *dataframe* resultante da consulta abaixo será o objeto *obras_visiveis*
 ```r
 library(httr)
 library(jsonlite)
+library(dplyr)
 
 #Obras visíveis no app
 
@@ -99,6 +100,9 @@ No caso, eu optei por selecionar as respostas pelos ids dos alertas. Mas se eu q
 O interessante é que caso o alerta ainda não tenha uma resposta, a consulta terá sucesso (status_code == 200) mas o df que será acrescido vai estar em branco. Por isso eu não precisei colocar condicionais (if) nessa consulta. 
 
 ```r
+library(httr)
+library(jsonlite)
+library(dplyr)
 
 inspection_ids <- c("223", "224", "225")
 
