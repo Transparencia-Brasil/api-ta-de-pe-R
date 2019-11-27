@@ -56,7 +56,7 @@ for(i in 1: length(pagina)){
 }
 ```
 
-### Consulta de alertas recebidos
+### Consulta de alertas recebidos para obras específicas
 
 Nesse exemplo, vou fazer a consulta para uma série de projetos que estão dentro do objeto `ids`
 
@@ -115,4 +115,39 @@ for(i in 1:length(inspection_ids)){
   respostas <- rbind(respostas, df)
 }
 
+```
+
+### Consulta todos os alertas recebidos:
+
+```
+library(httr)
+library(jsonlite)
+library(dplyr)
+
+alertas <- data.frame()
+
+n <- 9080/10
+pagina <- c(1:n)
+token_tdp <- "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiYXBpLXRlc3QifQ.vwzSUQKsig7JFQ2w-o85JgnVv-VytT2NsZYwRELTiaY"
+
+for(i in 1: length(pagina)){ 
+  
+  url <- paste0("http://tadepe.transparencia.org.br/api/inspections/content?page=", pagina[i])
+  
+  request <- GET(url, add_headers(Authorization = token_tdp))
+  
+  print(pagina[i])
+  print(request$status_code)
+  
+  response <- content(request, as = "text", encoding = "UTF-8")
+  
+  df <- fromJSON(response, flatten = TRUE) %>% 
+    data.frame()
+  
+  df <- df %>% mutate_all(as.character())
+  
+  alertas <- bind_rows(alertas, df)
+  
+  Sys.sleep(.25)
+}
 ```
